@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pracovní listy – ICT backend a databáze</title>
+  <style>
+    :root {
+      --bg: #eef2f8;
+      --panel: #ffffff;
+      --line: #d8e0ef;
+      --text: #14213d;
+      --muted: #5f6f94;
+      --primary: #315efb;
+      --primary-2: #1d3faa;
+      --soft: #f6f8fd;
+      --shadow: 0 16px 40px rgba(16, 35, 72, .12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(49,94,251,.15), transparent 24%),
+        radial-gradient(circle at top left, rgba(29,63,170,.12), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 28px auto 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #102042 0%, #233d8f 58%, #315efb 100%);
+      color: #fff;
+      border-radius: 30px;
+      padding: 42px 34px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      filter: blur(2px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 860px;
+      font-size: 18px;
+      color: rgba(255,255,255,.92);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 24px;
+      margin-top: 26px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .section {
+      padding: 26px;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 26px;
+    }
+
+    .section p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #fff 0%, #f8faff 100%);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 250px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eaf0ff;
+      color: var(--primary-2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.15;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      font-size: 13px;
+      color: var(--primary-2);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn--primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 24px rgba(49,94,251,.24);
+    }
+
+    .btn--secondary {
+      background: #edf2ff;
+      color: var(--primary-2);
+      border: 1px solid #d9e4ff;
+    }
+
+    .list {
+      margin: 18px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .list li + li {
+      margin-top: 8px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: #fff8ea;
+      border: 1px solid #f2ddb0;
+      color: #815c0b;
+    }
+
+    .small {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 34px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">ICT • Python • SQLite • FastAPI</div>
+      <h1>Pracovní listy k backendu a databázím</h1>
+      <p>
+        Tato úvodní stránka slouží jako rozcestník k interaktivním pracovním listům.
+        Listy navazují od databáze v SQLite přes skládání backendu ve FastAPI až po praktické
+        pochopení struktury projektu, rout, JSONu a práce se serverem.
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="panel section">
+        <h2>Vyber pracovní list</h2>
+        <p>
+          Doporučené pořadí je nejdřív práce s databází a teprve potom backend.
+          Tím je lépe vidět, jak backend navazuje na už existující data.
+        </p>
+
+        <div class="cards">
+          <article class="card">
+            <span class="badge">1. krok</span>
+            <h3>Rezervační hra – Python + SQLite</h3>
+            <p>
+              Interaktivní skládání programu pro práci s rezervacemi v konzoli.
+              Zaměřeno na databázový soubor, tabulku, ukládání dat a výpis rezervací.
+            </p>
+            <div class="meta">
+              <span class="chip">SQLite</span>
+              <span class="chip">Python</span>
+              <span class="chip">základy databází</span>
+            </div>
+            <div class="actions">
+              <a class="btn btn--primary" href="./Databaze/index.html">Otevřít list</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="badge">2. krok</span>
+            <h3>Backend Builder – FastAPI</h3>
+            <p>
+              Herní pracovní list pro skládání backendu. Obsahuje strukturu projektu,
+              prostředí <code>.venv</code>, route, JSON endpoint i HTML/static files.
+            </p>
+            <div class="meta">
+              <span class="chip">FastAPI</span>
+              <span class="chip">server</span>
+              <span class="chip">pracovní list</span>
+            </div>
+            <div class="actions">
+              <a class="btn btn--primary" href="./Backend/index.html">Otevřít list</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="footer-note">
+          <strong>Doporučení:</strong> měj všechny soubory pracovních listů ve stejné složce.
+          Tato stránka je na ně odkazovaná relativně, takže po přesunu balíčku budou odkazy dál fungovat.
+        </div>
+      </section>
+
+      <aside class="panel section">
+        <h2>Jak s tím pracovat</h2>
+        <p>
+          Pracovní listy jsou navržené jako průvodce i hra zároveň.
+          Nejprve pochopíš strukturu, potom skládáš jednotlivé části a nakonec získáš výsledný kód.
+        </p>
+
+        <ul class="list">
+          <li>Začni databázovým listem a ověř, že rozumíš tabulce a práci s daty.</li>
+          <li>Potom otevři backend builder a skládej uzly ve správném pořadí.</li>
+          <li>U ikon s otazníkem a knížkou si vždy otevři návod a slovník pojmů.</li>
+          <li>Finální kód a strukturu projektu si zkopíruj až po vyřešení mise.</li>
+        </ul>
+
+        <p class="small">
+          Balíček obsahuje rozcestník i jednotlivé listy v jednom adresáři.
+        </p>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>
