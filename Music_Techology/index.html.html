@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pracovní list – Průzkum hudebního software</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --card-2: #f8fafc;
+      --line: #dbe3ef;
+      --text: #152033;
+      --muted: #5d6b82;
+      --accent: #5b4bff;
+      --accent-2: #7b6dff;
+      --ok: #0f9d58;
+      --warn: #e67e22;
+      --danger: #c0392b;
+      --shadow: 0 12px 32px rgba(21, 32, 51, 0.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(91, 75, 255, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(123, 109, 255, 0.10), transparent 24%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(244, 246, 251, 0.88);
+      border-bottom: 1px solid rgba(219, 227, 239, 0.9);
+    }
+
+    .topbar-inner,
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-width: 280px;
+    }
+
+    .brand-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button,
+    select,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 16px;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(91, 75, 255, 0.22);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-danger {
+      background: #fff4f2;
+      color: var(--danger);
+      border: 1px solid #ffd6cf;
+    }
+
+    .hero {
+      padding: 34px 0 22px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(219, 227, 239, 0.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(91, 75, 255, 0.1);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.7rem, 3vw, 2.7rem);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .hero-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .mini {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .hero-side {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .progress-ring {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      background: linear-gradient(180deg, #fcfdff, #f8faff);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      text-align: center;
+      padding: 16px;
+    }
+
+    .progress-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .tip {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--card-2);
+    }
+
+    .tip strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    main {
+      padding-bottom: 40px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+      padding: 20px;
+    }
+
+    .sidebar h3,
+    section h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .navlist {
+      display: grid;
+      gap: 10px;
+    }
+
+    .navlist a {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 11px 13px;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .navlist a:hover {
+      border-color: var(--accent-2);
+      color: var(--accent);
+    }
+
+    .content {
+      display: grid;
+      gap: 20px;
+    }
+
+    section.card {
+      padding: 24px;
+    }
+
+    .section-intro {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .field,
+    .check-item,
+    .software-card,
+    .rubric-item {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .field {
+      padding: 14px;
+    }
+
+    .field label,
+    .soft-header h4 {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 12px;
+      border: 1px solid #cfd8e6;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 4px rgba(91, 75, 255, 0.10);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 92px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 7px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 12px;
+    }
+
+    .check-item {
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .check-item input[type="checkbox"] {
+      margin-top: 3px;
+      transform: scale(1.2);
+      accent-color: var(--accent);
+    }
+
+    .check-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .step-tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(91, 75, 255, 0.1);
+      border-radius: 999px;
+      padding: 5px 9px;
+    }
+
+    .prompt-box {
+      border-left: 4px solid var(--accent);
+      background: #f8f7ff;
+      padding: 16px;
+      border-radius: 0 16px 16px 0;
+      color: var(--text);
+    }
+
+    .software-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .software-card {
+      padding: 18px;
+    }
+
+    .soft-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .rank {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .soft-header h4 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .soft-meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 2px;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+    }
+
+    .stat .n {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .rubric {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rubric-item {
+      padding: 15px;
+    }
+
+    .rubric-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .output-box {
+      background: #101826;
+      color: #ecf3ff;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid #2b3a54;
+    }
+
+    .output-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.93rem;
+      line-height: 1.5;
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .footer-note {
+      padding: 16px 0 34px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .save-indicator {
+      font-size: 0.9rem;
+      color: var(--muted);
+      min-width: 150px;
+      text-align: right;
+    }
+
+    .hidden-print { }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .grid-2,
+      .grid-3,
+      .scoreboard {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-list {
+        grid-template-columns: 1fr;
+      }
+
+      .save-indicator {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner,
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar > * {
+        width: 100%;
+      }
+
+      .hero-main,
+      .hero-side,
+      section.card,
+      .sidebar {
+        padding: 18px;
+      }
+
+      .container,
+      .topbar-inner {
+        width: min(100% - 20px, 1180px);
+      }
+    }
+
+    @media print {
+      .topbar,
+      .sidebar,
+      .toolbar,
+      .hidden-print {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .container,
+      .topbar-inner {
+        width: 100%;
+      }
+
+      .hero,
+      main {
+        padding: 0;
+      }
+
+      .card,
+      .software-card,
+      .field,
+      .check-item,
+      .rubric-item {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar hidden-print">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">🎵</div>
+        <div>
+          <h1>Pracovní list – Průzkum hudebního software</h1>
+          <p>Pražská konzervatoř • interaktivní pomocník pro samostatný výzkum</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn-secondary" id="printBtn">Tisk / Uložit jako PDF</button>
+        <button class="btn-secondary" id="exportJsonBtn">Export dat (.json)</button>
+        <button class="btn-primary" id="exportMdBtn">Export osnovy (.md)</button>
+        <button class="btn-danger" id="resetBtn">Vymazat pracovní list</button>
+        <div class="save-indicator" id="saveIndicator">Průběžné ukládání zapnuto</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-main card">
+          <div class="eyebrow">🎓 Kritické myšlení + hudba + digitální dovednosti</div>
+          <h2>Najdi a porovnej 10 nejpoužívanějších nástrojů pro tvorbu, editaci a produkci hudby.</h2>
+          <p>
+            Tvým úkolem je vytvořit vlastní průzkum hudebního software. Nejde jen o opsání názvů programů.
+            Cílem je zjistit, <strong>co lidé v hudební praxi opravdu používají</strong>, proč to používají, jaké to má výhody,
+            omezení a z jakých zdrojů to můžeš doložit.
+          </p>
+          <p>
+            Tento pracovní list tě povede krok za krokem. Můžeš si do něj zapisovat poznámky, ukládá se přímo v prohlížeči
+            a na konci ti pomůže připravit osnovu finálního odevzdání.
+          </p>
+          <div class="hero-list">
+            <div class="mini"><strong>Výstup:</strong> vlastní průzkum 10 programů + zdroje + odkazy + krátké zhodnocení.</div>
+            <div class="mini"><strong>Forma:</strong> prezentace, HTML stránka, dokument, web, GitHub nebo jiný chytrý formát.</div>
+            <div class="mini"><strong>Důležité:</strong> když použiješ AI, musíš informace ověřit a uvést původní zdroje.</div>
+            <div class="mini"><strong>Cíl:</strong> samostatnost, práce se zdroji, argumentace a promyšlené odevzdání.</div>
+          </div>
+        </div>
+
+        <aside class="hero-side card">
+          <div class="progress-ring">
+            <div>
+              <div class="progress-value" id="progressPercent">0 %</div>
+              <div><strong>Postup splnění</strong></div>
+              <div class="small">Hotové kroky a vyplněná data</div>
+            </div>
+          </div>
+          <div class="tip">
+            <strong>Jak přemýšlet nad „nejpoužívanější“?</strong>
+            Nespoléhej jen na vlastní dojem. Sleduj videa, články, žebříčky, hudební fóra, oficiální weby a porovnávej více zdrojů.
+          </div>
+          <div class="tip">
+            <strong>Co se počítá?</strong>
+            DAW, notační software, editory audia, pluginy, mastering nástroje, live performance software, beatmaking a podobně.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main class="layout">
+      <aside class="sidebar card hidden-print">
+        <h3>Obsah pracovního listu</h3>
+        <nav class="navlist">
+          <a href="#zadani">1. Zadání a cíl</a>
+          <a href="#postup">2. Postup krok za krokem</a>
+          <a href="#strategie">3. Výzkumná strategie</a>
+          <a href="#software">4. Top 10 software</a>
+          <a href="#kriticke">5. Kritické myšlení</a>
+          <a href="#vystup">6. Jak odevzdat výstup</a>
+          <a href="#rubrika">7. Na co si dát pozor</a>
+          <a href="#osnova">8. Návrh osnovy výstupu</a>
+        </nav>
+      </aside>
+
+      <div class="content">
+        <section class="card" id="zadani">
+          <h3>1. Zadání a cíl úkolu</h3>
+          <p class="section-intro">
+            Vypracuj průzkum 10 nejpoužívanějších softwarových nástrojů souvisejících s hudbou. Zaměř se na to,
+            co hudebníci, producenti, skladatelé, zvukaři nebo tvůrci opravdu používají v praxi.
+          </p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="studentName">Jméno studenta</label>
+              <input type="text" id="studentName" placeholder="Např. Jan Novák" />
+            </div>
+            <div class="field">
+              <label for="className">Třída / skupina</label>
+              <input type="text" id="className" placeholder="Např. 2.A / Hudební informatika" />
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label for="goalField">Co chci tímto průzkumem zjistit?</label>
+              <textarea id="goalField" placeholder="Např. Které programy jsou nejčastější v produkci moderní hudby a čím se liší."></textarea>
+            </div>
+            <div class="field">
+              <label for="focusField">Na co se chci zaměřit nejvíc?</label>
+              <textarea id="focusField" placeholder="Např. DAW, práce se zvukem, skladba, notace, AI nástroje, live performance..."></textarea>
+            </div>
+          </div>
+
+          <div class="prompt-box" style="margin-top:16px;">
+            <strong>Nejde o „správný seznam“, ale o promyšlený seznam.</strong><br />
+            Když uvedeš, proč jsi zrovna tento software zařadil do top 10 a z čeho vycházíš, je to hodnotnější než slepé kopírování pořadí z internetu.
+          </div>
+        </section>
+
+        <section class="card" id="postup">
+          <h3>2. Postup krok za krokem</h3>
+          <p class="section-intro">Odškrtávej si, co máš hotové. Postup se ukládá automaticky.</p>
+
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" data-check="c1" /><span><span class="step-tag">Krok 1</span><strong>Pochopil/a jsem zadání.</strong> Vím, že mám hledat používaný hudební software a ne jen opsat 10 náhodných názvů.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c2" /><span><span class="step-tag">Krok 2</span><strong>Vybral/a jsem si strategii hledání.</strong> Rozmyslel/a jsem si, kde budu hledat: YouTube, odborné články, fóra, weby výrobců, žebříčky, recenze.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c3" /><span><span class="step-tag">Krok 3</span><strong>Rozdělil/a jsem si software do kategorií.</strong> Například DAW, notace, audio editace, pluginy, mix/mastering, live performance.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c4" /><span><span class="step-tag">Krok 4</span><strong>U každého programu hledám důkazy používání.</strong> Nechci jen „známý název“, ale i zdroj, který dokládá jeho rozšíření.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c5" /><span><span class="step-tag">Krok 5</span><strong>Zapisuji si odkazy a poznámky průběžně.</strong> Nenechávám si zdroje na konec, jinak je ztratím.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c6" /><span><span class="step-tag">Krok 6</span><strong>Porovnávám výhody a nevýhody.</strong> Přemýšlím, pro koho je software vhodný a v čem vyniká.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c7" /><span><span class="step-tag">Krok 7</span><strong>Promyslel/a jsem podobu odevzdání.</strong> Vím, jestli to pošlu jako prezentaci, HTML, web, dokument nebo jinou formu.</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c8" /><span><span class="step-tag">Krok 8</span><strong>Finální výstup umí někdo otevřít a pochopit.</strong> Odkazy fungují, zdroje jsou čitelné a je jasné, co jsem zjistil/a.</span></label>
+          </div>
+        </section>
+
+        <section class="card" id="strategie">
+          <h3>3. Výzkumná strategie</h3>
+          <p class="section-intro">Než začneš vyplňovat top 10, napiš si plán. Ušetří ti to čas.</p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="searchKeywords">Jaká klíčová slova budu používat?</label>
+              <textarea id="searchKeywords" placeholder="Např. best DAW 2026, most used music production software, notation software for composers, audio editing tools for musicians..."></textarea>
+              <div class="small">Piš česky i anglicky. V angličtině bývá víc kvalitních zdrojů.</div>
+            </div>
+            <div class="field">
+              <label for="searchPlaces">Kde budu hledat?</label>
+              <textarea id="searchPlaces" placeholder="Např. YouTube, Reddit, magazíny o hudbě, oficiální weby programů, recenze, fóra producentů..."></textarea>
+              <div class="small">Ideálně kombinuj video, textové zdroje i oficiální informace od výrobců.</div>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top:14px;">
+            <div class="field">
+              <label for="cat1">Kategorie 1</label>
+              <input type="text" id="cat1" placeholder="Např. DAW" />
+            </div>
+            <div class="field">
+              <label for="cat2">Kategorie 2</label>
+              <input type="text" id="cat2" placeholder="Např. Notace" />
+            </div>
+            <div class="field">
+              <label for="cat3">Kategorie 3</label>
+              <input type="text" id="cat3" placeholder="Např. Editace audia" />
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label for="rankingMethod">Jak budu rozhodovat o pořadí v top 10?</label>
+              <textarea id="rankingMethod" placeholder="Např. podle četnosti výskytu ve zdrojích, známosti mezi hudebníky, profesionálního využití a opakování v recenzích."></textarea>
+            </div>
+            <div class="field">
+              <label for="strategyNotes">Průběžné poznámky ke strategii</label>
+              <textarea id="strategyNotes" placeholder="Např. Často se opakují Ableton Live, Logic Pro, Pro Tools... Musím ověřit, jestli jsou to opravdu nejpoužívanější nástroje nebo jen nejvíc viditelné."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="software">
+          <h3>4. Top 10 software – výzkumné karty</h3>
+          <p class="section-intro">
+            U každého programu zapiš nejen název, ale i důvod zařazení, zdroje, využití a vlastní zhodnocení.
+            Když něco nevíš jistě, napiš to. Nejistotu je lepší přiznat než tvářit se sebejistě bez důkazů.
+          </p>
+
+          <div class="software-grid" id="softwareGrid"></div>
+        </section>
+
+        <section class="card" id="kriticke">
+          <h3>5. Kritické myšlení a práce se zdroji</h3>
+          <p class="section-intro">Tohle je jedna z nejdůležitějších částí celého úkolu.</p>
+
+          <div class="rubric">
+            <div class="rubric-item">
+              <strong>Neber první výsledek jako pravdu.</strong>
+              Jeden článek nebo jedno video může být zaujaté, reklamní nebo zastaralé. Porovnávej více zdrojů.
+            </div>
+            <div class="rubric-item">
+              <strong>Rozlišuj popularitu a profesionalitu.</strong>
+              Něco může být populární mezi začátečníky, ale jinde se používá v profesionální produkci.
+            </div>
+            <div class="rubric-item">
+              <strong>AI není zdroj, ale pomocník.</strong>
+              Může ti pomoct s orientací, ale finální informace musíš ověřit z reálných zdrojů a ty uvést.
+            </div>
+            <div class="rubric-item">
+              <strong>Zdroj by měl jít otevřít.</strong>
+              Uváděj odkazy tak, aby si je mohl učitel i spolužák skutečně zkontrolovat.
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label for="biasNotes">Jaké zkreslení nebo problém jsem během hledání zaznamenal/a?</label>
+              <textarea id="biasNotes" placeholder="Např. Některé weby tlačí jen placené programy. Na YouTube jsou často sponzorované recenze."></textarea>
+            </div>
+            <div class="field">
+              <label for="verificationNotes">Jak jsem ověřoval/a informace?</label>
+              <textarea id="verificationNotes" placeholder="Např. Porovnal/a jsem 3 různé zdroje, zkontroloval/a oficiální web a ověřil/a cenu i podporované platformy."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="vystup">
+          <h3>6. Jak odevzdat výstup</h3>
+          <p class="section-intro">
+            Formu necháváš na sobě. Důležité je, aby byla funkční, přehledná a odpovídala obsahu.
+          </p>
+
+          <div class="grid-3">
+            <div class="field">
+              <label for="deliveryType">Zvolená forma výstupu</label>
+              <select id="deliveryType">
+                <option value="">Vyber možnost</option>
+                <option>Prezentace</option>
+                <option>HTML stránka</option>
+                <option>Dokument / PDF</option>
+                <option>Web / GitHub Pages</option>
+                <option>GitHub repozitář</option>
+                <option>Jiná forma</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="deliveryWhy">Proč jsem si vybral/a tuto formu?</label>
+              <input type="text" id="deliveryWhy" placeholder="Např. HTML je přehledné a umím do něj vložit odkazy i vlastní design." />
+            </div>
+            <div class="field">
+              <label for="deliveryNeeds">Co bude potřeba pro otevření?</label>
+              <input type="text" id="deliveryNeeds" placeholder="Např. odkaz na GitHub, zip soubor, PDF, online prezentace..." />
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label for="deliveryPlan">Jak to učiteli pošlu?</label>
+              <textarea id="deliveryPlan" placeholder="Např. Pošlu odkaz na GitHub Pages + repozitář. Pokud použiji HTML, přiložím i zip. Pokud AI pomohla, vysvětlím kde a jak."></textarea>
+            </div>
+            <div class="field">
+              <label for="finalReflection">Co bude ve výstupu nejdůležitější?</label>
+              <textarea id="finalReflection" placeholder="Např. Jasné pořadí, stručné důvody, fungující odkazy, vlastní komentář a porovnání jednotlivých nástrojů."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="rubrika">
+          <h3>7. Na co si dát pozor</h3>
+          <p class="section-intro">Tohle jsou věci, které zvedají kvalitu práce.</p>
+
+          <div class="scoreboard">
+            <div class="stat"><span class="n" id="statSoftware">0</span>Vyplněných softwarů</div>
+            <div class="stat"><span class="n" id="statSources">0</span>Vyplněných odkazů</div>
+            <div class="stat"><span class="n" id="statYT">0</span>YouTube odkazů</div>
+            <div class="stat"><span class="n" id="statChecks">0</span>Hotových kroků</div>
+          </div>
+
+          <div class="rubric" style="margin-top:14px;">
+            <div class="rubric-item"><strong>1. Přehlednost</strong> Je jasné, co je software, proč je v seznamu a kde jsou zdroje?</div>
+            <div class="rubric-item"><strong>2. Vlastní myšlení</strong> Je vidět, že jsi jen nekopíroval/a cizí seznamy, ale porovnával/a a rozhodoval/a se?</div>
+            <div class="rubric-item"><strong>3. Důvěryhodnost</strong> Jsou u tvrzení uvedené odkazy, které lze ověřit?</div>
+            <div class="rubric-item"><strong>4. Odevzdání</strong> Lze tvůj výstup snadno otevřít, zkontrolovat a pochopit?</div>
+          </div>
+        </section>
+
+        <section class="card" id="osnova">
+          <h3>8. Návrh osnovy finálního výstupu</h3>
+          <p class="section-intro">
+            Tady se průběžně generuje návrh osnovy podle toho, co jsi vyplnil/a. Můžeš ho použít do prezentace, dokumentu nebo HTML stránky.
+          </p>
+
+          <div class="output-box">
+            <pre id="reportPreview">Zatím není co zobrazit. Začni vyplňovat pracovní list.</pre>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="footer-note">
+      Pracovní list funguje lokálně v prohlížeči. Data se ukládají do tohoto zařízení pomocí localStorage.
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "pk_hudebni_software_pracovni_list_v1";
+    const softwareGrid = document.getElementById("softwareGrid");
+    const saveIndicator = document.getElementById("saveIndicator");
+    const progressPercent = document.getElementById("progressPercent");
+    const reportPreview = document.getElementById("reportPreview");
+
+    const softwareTemplate = Array.from({ length: 10 }, (_, i) => ({
+      rank: i + 1,
+      name: "",
+      category: "",
+      use: "",
+      whyPopular: "",
+      platform: "",
+      pricing: "",
+      strengths: "",
+      weaknesses: "",
+      website: "",
+      youtube: "",
+      source1: "",
+      source2: "",
+      note: ""
+    }));
+
+    const baseState = {
+      checks: {
+        c1: false, c2: false, c3: false, c4: false, c5: false, c6: false, c7: false, c8: false
+      },
+      fields: {},
+      software: softwareTemplate
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(baseState);
+        const parsed = JSON.parse(raw);
+        return {
+          checks: { ...baseState.checks, ...(parsed.checks || {}) },
+          fields: { ...(parsed.fields || {}) },
+          software: Array.isArray(parsed.software) && parsed.software.length === 10
+            ? parsed.software.map((item, idx) => ({ ...softwareTemplate[idx], ...item, rank: idx + 1 }))
+            : structuredClone(softwareTemplate)
+        };
+      } catch (e) {
+        return structuredClone(baseState);
+      }
+    }
+
+    let state = loadState();
+
+    function setSaveMessage(text) {
+      saveIndicator.textContent = text;
+      clearTimeout(setSaveMessage._timer);
+      setSaveMessage._timer = setTimeout(() => {
+        saveIndicator.textContent = "Průběžné ukládání zapnuto";
+      }, 1800);
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      setSaveMessage("Uloženo");
+      updateStats();
+      renderReport();
+    }
+
+    function createSoftwareCards() {
+      softwareGrid.innerHTML = "";
+      state.software.forEach((item, index) => {
+        const el = document.createElement("article");
+        el.className = "software-card";
+        el.innerHTML = `
+          <div class="soft-header">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div class="rank">${item.rank}</div>
+              <div>
+                <h4>Software #${item.rank}</h4>
+                <div class="soft-meta">Vyplň název, využití, zdroje a vlastní zhodnocení.</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Název software</label>
+              <input type="text" data-soft="${index}" data-key="name" placeholder="Např. Ableton Live" value="${escapeHtml(item.name)}" />
+            </div>
+            <div class="field">
+              <label>Kategorie</label>
+              <input type="text" data-soft="${index}" data-key="category" placeholder="Např. DAW / notace / audio editace" value="${escapeHtml(item.category)}" />
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label>K čemu se používá?</label>
+              <textarea data-soft="${index}" data-key="use" placeholder="Např. produkce, nahrávání, střih, live performance...">${escapeHtml(item.use)}</textarea>
+            </div>
+            <div class="field">
+              <label>Proč je podle mě / zdrojů populární?</label>
+              <textarea data-soft="${index}" data-key="whyPopular" placeholder="Např. často se objevuje ve videích producentů, používají ho začátečníci i profíci, má širokou podporu pluginů...">${escapeHtml(item.whyPopular)}</textarea>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-top:14px;">
+            <div class="field">
+              <label>Platforma</label>
+              <input type="text" data-soft="${index}" data-key="platform" placeholder="Windows / macOS / web / iPad..." value="${escapeHtml(item.platform)}" />
+            </div>
+            <div class="field">
+              <label>Cena / licence</label>
+              <input type="text" data-soft="${index}" data-key="pricing" placeholder="Zdarma / placené / předplatné / trial..." value="${escapeHtml(item.pricing)}" />
+            </div>
+            <div class="field">
+              <label>Oficiální web</label>
+              <input type="url" data-soft="${index}" data-key="website" placeholder="https://..." value="${escapeHtml(item.website)}" />
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="field">
+              <label>Hlavní výhody</label>
+              <textarea data-soft="${index}" data-key="strengths" placeholder="Např. intuitivní workflow, rozšířenost, kvalitní MIDI práce...">${escapeHtml(item.strengths)}</textarea>
+            </div>
+            <div class="field">
+              <label>Hlavní nevýhody / omezení</label>
+              <textarea data-soft="${index}" data-key="weaknesses" placeholder="Např. vyšší cena, složité ovládání, omezená podpora platformy...">${escapeHtml(item.weaknesses)}</textarea>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-top:14px;">
+            <div class="field">
+              <label>YouTube odkaz</label>
+              <input type="url" data-soft="${index}" data-key="youtube" placeholder="https://youtube.com/..." value="${escapeHtml(item.youtube)}" />
+            </div>
+            <div class="field">
+              <label>Zdroj 1</label>
+              <input type="url" data-soft="${index}" data-key="source1" placeholder="https://..." value="${escapeHtml(item.source1)}" />
+            </div>
+            <div class="field">
+              <label>Zdroj 2</label>
+              <input type="url" data-soft="${index}" data-key="source2" placeholder="https://..." value="${escapeHtml(item.source2)}" />
+            </div>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label>Moje poznámka k tomuto software</label>
+            <textarea data-soft="${index}" data-key="note" placeholder="Sem napiš vlastní postřeh: Pro koho se hodí? Překvapilo mě něco? Zařadil/a bych ho opravdu do top 10?">${escapeHtml(item.note)}</textarea>
+          </div>
+        `;
+        softwareGrid.appendChild(el);
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function bindGeneralFields() {
+      document.querySelectorAll("input[id], textarea[id], select[id]").forEach((field) => {
+        if (["printBtn", "exportJsonBtn", "exportMdBtn", "resetBtn"].includes(field.id)) return;
+        if (field.dataset.bound === "1") return;
+        field.dataset.bound = "1";
+
+        if (field.type === "checkbox" && field.dataset.check) {
+          field.checked = !!state.checks[field.dataset.check];
+          field.addEventListener("change", () => {
+            state.checks[field.dataset.check] = field.checked;
+            saveState();
+          });
+          return;
+        }
+
+        if (!field.dataset.soft) {
+          field.value = state.fields[field.id] || "";
+          field.addEventListener("input", () => {
+            state.fields[field.id] = field.value;
+            saveState();
+          });
+        }
+      });
+    }
+
+    function bindSoftwareFields() {
+      softwareGrid.querySelectorAll("[data-soft][data-key]").forEach((field) => {
+        if (field.dataset.bound === "1") return;
+        field.dataset.bound = "1";
+        field.addEventListener("input", () => {
+          const idx = Number(field.dataset.soft);
+          const key = field.dataset.key;
+          state.software[idx][key] = field.value;
+          saveState();
+        });
+      });
+    }
+
+    function countFilledSoftware() {
+      return state.software.filter(item => item.name.trim()).length;
+    }
+
+    function countLinks(keys) {
+      let total = 0;
+      state.software.forEach(item => {
+        keys.forEach(key => {
+          if ((item[key] || "").trim()) total++;
+        });
+      });
+      return total;
+    }
+
+    function updateStats() {
+      const checksDone = Object.values(state.checks).filter(Boolean).length;
+      const softwareDone = countFilledSoftware();
+      const sourceCount = countLinks(["website", "source1", "source2"]);
+      const ytCount = countLinks(["youtube"]);
+
+      document.getElementById("statSoftware").textContent = softwareDone;
+      document.getElementById("statSources").textContent = sourceCount;
+      document.getElementById("statYT").textContent = ytCount;
+      document.getElementById("statChecks").textContent = checksDone;
+
+      const fieldIds = [
+        "studentName", "className", "goalField", "focusField", "searchKeywords", "searchPlaces",
+        "cat1", "cat2", "cat3", "rankingMethod", "strategyNotes", "biasNotes",
+        "verificationNotes", "deliveryType", "deliveryWhy", "deliveryNeeds", "deliveryPlan", "finalReflection"
+      ];
+
+      const generalDone = fieldIds.filter(id => (state.fields[id] || "").toString().trim()).length;
+      const totalUnits = 8 + 10 + fieldIds.length;
+      const doneUnits = checksDone + softwareDone + generalDone;
+      const pct = Math.round((doneUnits / totalUnits) * 100);
+      progressPercent.textContent = pct + " %";
+    }
+
+    function renderReport() {
+      const student = state.fields.studentName || "(doplň jméno)";
+      const cls = state.fields.className || "(doplň třídu)";
+      const goal = state.fields.goalField || "(doplň cíl práce)";
+      const focus = state.fields.focusField || "(doplň zaměření)";
+      const form = state.fields.deliveryType || "(doplň formu výstupu)";
+      const rankingMethod = state.fields.rankingMethod || "(doplň metodu pořadí)";
+      const verification = state.fields.verificationNotes || "(doplň způsob ověřování)";
+
+      const filledSoftware = state.software.filter(item => item.name.trim());
+
+      if (!filledSoftware.length && !student.trim()) {
+        reportPreview.textContent = "Zatím není co zobrazit. Začni vyplňovat pracovní list.";
+        return;
+      }
+
+      let text = `# Průzkum hudebního software\n\n`;
+      text += `**Student:** ${student}\n`;
+      text += `**Třída / skupina:** ${cls}\n\n`;
+      text += `## Cíl práce\n${goal}\n\n`;
+      text += `## Hlavní zaměření\n${focus}\n\n`;
+      text += `## Jak jsem určoval/a pořadí\n${rankingMethod}\n\n`;
+      text += `## Top 10 software\n`;
+
+      if (!filledSoftware.length) {
+        text += `Zatím nejsou vyplněné žádné položky.\n\n`;
+      } else {
+        filledSoftware.forEach((item, idx) => {
+          text += `\n### ${idx + 1}. ${item.name || "Bez názvu"}\n`;
+          if (item.category) text += `- Kategorie: ${item.category}\n`;
+          if (item.use) text += `- Využití: ${item.use}\n`;
+          if (item.whyPopular) text += `- Proč je důležitý/populární: ${item.whyPopular}\n`;
+          if (item.platform) text += `- Platforma: ${item.platform}\n`;
+          if (item.pricing) text += `- Cena/licence: ${item.pricing}\n`;
+          if (item.strengths) text += `- Výhody: ${item.strengths}\n`;
+          if (item.weaknesses) text += `- Nevýhody: ${item.weaknesses}\n`;
+          if (item.website) text += `- Oficiální web: ${item.website}\n`;
+          if (item.youtube) text += `- YouTube: ${item.youtube}\n`;
+          if (item.source1) text += `- Zdroj 1: ${item.source1}\n`;
+          if (item.source2) text += `- Zdroj 2: ${item.source2}\n`;
+          if (item.note) text += `- Moje poznámka: ${item.note}\n`;
+        });
+      }
+
+      text += `\n## Jak jsem ověřoval/a informace\n${verification}\n\n`;
+      if (state.fields.biasNotes) {
+        text += `## Na jaké problémy nebo zkreslení jsem narazil/a\n${state.fields.biasNotes}\n\n`;
+      }
+      text += `## Zvolená forma odevzdání\n${form}\n\n`;
+      if (state.fields.deliveryWhy) text += `**Proč právě tato forma:** ${state.fields.deliveryWhy}\n\n`;
+      if (state.fields.deliveryPlan) text += `## Jak výstup odešlu\n${state.fields.deliveryPlan}\n\n`;
+      if (state.fields.finalReflection) text += `## Co považuji za nejdůležitější\n${state.fields.finalReflection}\n`;
+
+      reportPreview.textContent = text.trim();
+    }
+
+    function exportFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    document.getElementById("exportJsonBtn").addEventListener("click", () => {
+      exportFile("pracovni-list-hudebni-software-data.json", JSON.stringify(state, null, 2), "application/json;charset=utf-8");
+    });
+
+    document.getElementById("exportMdBtn").addEventListener("click", () => {
+      exportFile("osnova-pruzkum-hudebni-software.md", reportPreview.textContent, "text/markdown;charset=utf-8");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      const ok = confirm("Opravdu chceš vymazat celý pracovní list v tomto prohlížeči?");
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = structuredClone(baseState);
+      document.querySelectorAll("input[type='checkbox'][data-check]").forEach(cb => cb.checked = false);
+      document.querySelectorAll("input[id], textarea[id], select[id]").forEach(field => {
+        if (["printBtn", "exportJsonBtn", "exportMdBtn", "resetBtn"].includes(field.id)) return;
+        if (!field.dataset.soft && field.type !== "checkbox") field.value = "";
+      });
+      createSoftwareCards();
+      bindSoftwareFields();
+      bindGeneralFields();
+      updateStats();
+      renderReport();
+      setSaveMessage("Pracovní list byl vymazán");
+    });
+
+    createSoftwareCards();
+    bindSoftwareFields();
+    bindGeneralFields();
+    updateStats();
+    renderReport();
+  </script>
+</body>
+</html>
